@@ -33,7 +33,7 @@ Para a utilização do software, primeiramente é necessário ter o mesmo em sua
   
   ![Download via ZIP](images/baixarZIP.png)
   
-1.    Clonando o repositório com o comando:
+2.    Clonando o repositório com o comando:
 ```
 git clone git@github.com:CarlosASouto/IC-Transportes.git
 ```
