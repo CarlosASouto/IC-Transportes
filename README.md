@@ -30,7 +30,9 @@ Para que o software consiga realizar seu processamento com exito é necessário 
 
 Para a utilização do software, primeiramente é necessário ter o mesmo em sua máquina local, do qual isso pode ser feito de duas maneiras distintas:
 1.    Baixando o arquivo ZIP disponibilizado neste próprio repositório, em seguida fazer a descompactação do mesmo em sua máquina local.
+  
   ![Download via ZIP](images/baixarZIP.png)
+  
 1.    Clonando o repositório com o comando:
 ```
 git clone git@github.com:CarlosASouto/IC-Transportes.git
