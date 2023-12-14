@@ -1,13 +1,14 @@
 """
 
-    Autor: Leonardo Becker de Oliveira
-    Contato: leonardobecker79@gmail.com
-    Última atualização: 24/09/2023
-    Link para o repositório: https://github.com/LeonardooBecker/processa_dados
+    Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
+    Contato: carloshasouto@gmail.com
+    Última atualização: 14/12/2023
+    Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
 
 import sys
+import os
 from local_libs import cards as cd
 from local_libs import geraPlanilha as gp
 from local_libs import utils
@@ -21,7 +22,6 @@ from local_libs import criaBanco
 # Entrada do condutor por argumento
 try:
     condutor = sys.argv[1]
-    print("Driver", condutor)
 except:
     print("Condutor não informado!")
     print("Informe o condutor como argumento: ")
@@ -29,7 +29,13 @@ except:
     sys.exit()
 
 # Leitura dos cards e seus respectivos videos
-totalCards = cd.obtemCards("./Driver "+condutor)
+if condutor == "./":
+    condutores = [pasta for pasta in os.listdir(condutor) if os.path.isdir(pasta) and pasta.startswith("Driver ")]   
+    totalCards = []
+    for pasta_condutor in condutores:
+        totalCards.extend(cd.obtemCards(os.path.join(condutor, pasta_condutor)))
+else:
+    totalCards = cd.obtemCards("./Driver "+condutor)
 
 limparBanco = 1
 indexInicial = 1
@@ -71,7 +77,7 @@ for card in totalCards:
 
     # Concatena os vídeos
     jv.concatenaVideos(viagensBack, card.diretorioBack,
-                    diretorioVideosConcatenados, condutor)
+                 diretorioVideosConcatenados, condutor)
     jv.concatenaVideos(viagensFront, card.diretorioFront,
                     diretorioVideosConcatenados, condutor)
 

@@ -1,9 +1,9 @@
 """
 
-    Autor: Leonardo Becker de Oliveira
-    Contato: leonardobecker79@gmail.com
-    Última atualização: 24/09/2023
-    Link para o repositório: https://github.com/LeonardooBecker/processa_dados
+    Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
+    Contato: carloshasouto@gmail.com
+    Última atualização: 14/12/2023
+    Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
 
@@ -16,23 +16,20 @@ def corrigeTabela(matriz):
         if (i > 0):
             timeAtual = matriz[i][0]
             timeAnterior = matriz[i-1][0]
-            # Se a diferença entre os timestamps for >= 2 significa linha faltante, logo são feita adições
-            if (abs(timeAtual-timeAnterior) >= 2):
 
-                matriz[i-1] = (matriz[i-1][0]+timeAtual -
-                               timeAnterior,)+matriz[i-1][1:]
+            diffSegundos = abs(timeAtual-timeAnterior)
+            if (diffSegundos == 1):
+                novaMatriz.append(matriz[i])
+            else:
+                for j in range(diffSegundos):
+                    novaMatriz.append((timeAnterior+j+1,)+matriz[i][1:])
 
-                for i in range(abs(timeAtual-timeAnterior)-1):
-                    novaMatriz.append((timeAnterior+i+1,)+matriz[i][1:])
-                novaMatriz.append(matriz[i])
-            # Caso normal
-            elif (abs(timeAtual-timeAnterior) == 1):
-                novaMatriz.append(matriz[i])
-            # Comando não necessário, mas o outro caso seria quando a diferença entre time é 0, não sendo necessário inserções
+            # Não é necessário comando para quando a diferença entre time é 0, não sendo necessário inserções
         # Primeira iteração
         else:
             novaMatriz.append(matriz[i])
     return novaMatriz
+
 
 
 # Caso diretório não exista, cria o mesmo, caso contrario limpa o diretório

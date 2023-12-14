@@ -1,9 +1,9 @@
 """
 
-    Autor: Leonardo Becker de Oliveira
-    Contato: leonardobecker79@gmail.com
-    Última atualização: 24/09/2023
-    Link para o repositório: https://github.com/LeonardooBecker/processa_dados
+    Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
+    Contato: carloshasouto@gmail.com
+    Última atualização: 14/12/2023
+    Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
 
