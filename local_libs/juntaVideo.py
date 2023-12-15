@@ -12,14 +12,19 @@ import subprocess
 import sys
 
 # Concatena os videos de uma viagem
-def concatenaVideos(viagens, diretorioCard, diretorioVideosConcatenados, condutor):
+def concatenaVideos(viagens, diretorioCard, diretorioVideosConcatenados, condutor, condutores):
     playlist_file = 'playlist.txt'
     for viagem in viagens:
         with open(playlist_file, 'w') as pFile:
             for video in viagem.elementos:
                 pFile.write(f"file '{diretorioCard}/{video}'\n")
-
-        nomeVideo = f'{diretorioVideosConcatenados}/Viagem{condutor}{viagem.index}-{viagem.nome}-{viagem.categoria}.mp4'
+        if condutor == "./":
+            for driver in condutores:
+                separado = driver.split(' ')
+                codigo = separado[1]
+                nomeVideo = f'{diretorioVideosConcatenados}/Viagem{codigo}{viagem.index}-{viagem.nome}-{viagem.categoria}.mp4'         
+        else:    
+            nomeVideo = f'{diretorioVideosConcatenados}/Viagem{condutor}{viagem.index}-{viagem.nome}-{viagem.categoria}.mp4'
         command = ['ffmpeg', '-f', 'concat', '-safe', '0',
                    '-i', playlist_file, '-c', 'copy', nomeVideo]
         

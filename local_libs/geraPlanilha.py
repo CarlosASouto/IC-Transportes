@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 14/12/2023
+    Última atualização: 15/12/2023
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
@@ -93,19 +93,26 @@ def geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado):
     semVideoCSV = f'{diretorioGPSConcatenado}/{ct.planilhaSemVideo}.csv'
 
     # Busca o último vídeo da última viagem previamente definida
-    lastViagem = viagensBack[len(viagensBack)-1].elementos
-    lastViagem = lastViagem[len(lastViagem)-1][21:24]
+    if viagensBack:
+        lastViagem = viagensBack[len(viagensBack)-1].elementos
+        lastViagem = lastViagem[len(lastViagem)-1][21:24]
+        
 
-    # QuerySQL devolvendo todos os dados cuja id do vídeo seja maior que o último vídeo da última viagem
-    consulta_sql = f"SELECT * FROM card_table WHERE VIDEO>{lastViagem} AND HOVER='A'"
+        # QuerySQL devolvendo todos os dados cuja id do vídeo seja maior que o último vídeo da última viagem
+        consulta_sql = f"SELECT * FROM card_table WHERE VIDEO>{lastViagem} AND HOVER='A'"
+    else:
+        consulta_sql = f"SELECT * FROM card_table WHERE HOVER='A'"
     cursor.execute(consulta_sql)
 
     tabela = cursor.fetchall()
     tabela = utils.corrigeTabela(tabela)
     if (len(tabela) > 1):
         with open(semVideoCSV, 'w') as arquivoGPS:
-            preencheArquivoCSV(tabela, arquivoGPS, condutor,
-                               viagensBack[len(viagensBack)-1].index+1)
+            if viagensBack:
+                preencheArquivoCSV(tabela, arquivoGPS, condutor,
+                                viagensBack[len(viagensBack)-1].index+1)
+            else:
+                preencheArquivoCSV(tabela, arquivoGPS, condutor, 1)
         arquivoGPS.close()
 
     conexao.commit()
@@ -113,8 +120,7 @@ def geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado):
 
 
 # Função que gera as planilhas CSV que possuem vídeos associados, capturados pela plataforma
-def geraPlanilhasOficial(viagensBack, condutor, diretorioGPSConcatenado, indexInicial):
-
+def geraPlanilhasOficial(viagensBack, condutor, condutores, diretorioGPSConcatenado, indexInicial):
     conexao = sqlite3.connect(ct.dataBaseAuxiliar)
     cursor = conexao.cursor()
     # Para cada viagem contida no Card
@@ -133,12 +139,23 @@ def geraPlanilhasOficial(viagensBack, condutor, diretorioGPSConcatenado, indexIn
 
         # Correção da tabela de dados ( manter 1 segundo de diferença para cada linha )
         tabela = utils.corrigeTabela(tabela)
-        try:
-            nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{condutor}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'
-        except:
-            nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{condutor}{indexInicial+i}-{viagensBack[i].nome}.csv'
+        if condutor == "./":
+            for driver in condutores:
+                separado = driver.split(' ')
+                codigo = separado[1]
+                try:
+                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'       
+                except:
+                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo}{indexInicial+i}-{viagensBack[i].nome}.csv'
+        else:
+            try:
+                nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{condutor}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'       
+            except:
+                nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{condutor}{indexInicial+i}-{viagensBack[i].nome}.csv'
         with open(nomeArquivoCSV, 'w') as arquivoGPS:
             # Com a tabela obtida e corrigida, é possível criar os arquivos CSV
+            if condutor == "./":
+                condutor = codigo
             preencheArquivoCSV(tabela, arquivoGPS, condutor,
                                viagensBack[i].index)
         arquivoGPS.close()

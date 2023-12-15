@@ -57,26 +57,27 @@ def ehMesmaViagem(videoAnterior, videoAtual):
 # Função que preenche as viagens de cada Card dentro do objeto Viagem
 def preencheViagens(viagensTotais, categoria, index):
     vetorViagens = []
-    viagem = []
-    viagensTotais = sorted(viagensTotais)
-    viagem.append(viagensTotais[0])
-    for i in range(len(viagensTotais)):
-        if (i > 0):
-            if (ehMesmaViagem(viagensTotais[i-1], viagensTotais[i])):
-                viagem.append(viagensTotais[i])
-            else:
-                # [2:17] - Apenas a região que contém o dia e o horário do vídeo
-                objViagem = Viagem(viagem[0][2:17], index, categoria, viagem)
-                if (len(objViagem.elementos) >= ct.quantidadeMinimaVideos):
-                    vetorViagens.append(objViagem)
-                    index += 1
-                viagem = []
-                viagem.append(viagensTotais[i])
+    if viagensTotais:
+        viagem = []
+        viagensTotais = sorted(viagensTotais)
+        viagem.append(viagensTotais[0])
+        for i in range(len(viagensTotais)):
+            if (i > 0):
+                if (ehMesmaViagem(viagensTotais[i-1], viagensTotais[i])):
+                    viagem.append(viagensTotais[i])
+                else:
+                    # [2:17] - Apenas a região que contém o dia e o horário do vídeo
+                    objViagem = Viagem(viagem[0][2:17], index, categoria, viagem)
+                    if (len(objViagem.elementos) >= ct.quantidadeMinimaVideos):
+                        vetorViagens.append(objViagem)
+                        index += 1
+                    viagem = []
+                    viagem.append(viagensTotais[i])
 
-    # [2:17] - Apenas a região que contém o dia e o horário do vídeo
-    objViagem = Viagem(viagem[0][2:17], index, categoria, viagem)
-    if (len(objViagem.elementos) >= ct.quantidadeMinimaVideos):
-        vetorViagens.append(objViagem)
-        index += 1
+        # [2:17] - Apenas a região que contém o dia e o horário do vídeo
+        objViagem = Viagem(viagem[0][2:17], index, categoria, viagem)
+        if (len(objViagem.elementos) >= ct.quantidadeMinimaVideos):
+            vetorViagens.append(objViagem)
+            index += 1
 
     return vetorViagens

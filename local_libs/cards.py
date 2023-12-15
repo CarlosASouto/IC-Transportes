@@ -53,6 +53,7 @@ def validaInformacoes(nomePasta, diretorioBack, diretorioFront, diretorioGps):
 # Função que preenche os objetos Cards com as informações obtidas
 def obtemCards(diretorio):
     pastas = os.listdir(diretorio)
+    print ("Encontrado:",diretorio ,pastas)
     pastas = sorted(pastas)
     elementos = []
     for nomePasta in pastas:

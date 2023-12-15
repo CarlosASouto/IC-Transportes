@@ -25,16 +25,19 @@ try:
 except:
     print("Condutor não informado!")
     print("Informe o condutor como argumento: ")
-    print("> python3 processaDados.py 'condutor' ")
+    print("> python3 processaDados.py 'codigo do condutor' ")
+    print("ou")
+    print("> python3 processaDados.py ./ (para rodar o codigo para todos os condutores da pasta)")
     sys.exit()
 
 # Leitura dos cards e seus respectivos videos
 if condutor == "./":
-    condutores = [pasta for pasta in os.listdir(condutor) if os.path.isdir(pasta) and pasta.startswith("Driver ")]   
+    condutores = [pasta for pasta in os.listdir(condutor) if os.path.isdir(pasta) and pasta.startswith("Driver ")]
     totalCards = []
     for pasta_condutor in condutores:
-        totalCards.extend(cd.obtemCards(os.path.join(condutor, pasta_condutor)))
+        totalCards.extend(cd.obtemCards(os.path.join(condutor, f'{pasta_condutor}')))
 else:
+    condutores = condutor
     totalCards = cd.obtemCards("./Driver "+condutor)
 
 limparBanco = 1
@@ -65,8 +68,8 @@ for card in totalCards:
     utils.limpaDiretorio(diretorioGPSConcatenado)
 
     # Gera os arquivos CSV que contém os dados das viagens com vídeo
-    gp.geraPlanilhasOficial(viagensBack, condutor,
-                            diretorioGPSConcatenado, indexInicial)
+    gp.geraPlanilhasOficial(viagensBack,condutor, condutores,
+                                diretorioGPSConcatenado, indexInicial)
 
     # Gera o arquivo CSV que contém os dados das viagens sem vídeo
     gp.geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado)
@@ -76,10 +79,11 @@ for card in totalCards:
     utils.limpaDiretorio(diretorioVideosConcatenados)
 
     # Concatena os vídeos
-    jv.concatenaVideos(viagensBack, card.diretorioBack,
-                 diretorioVideosConcatenados, condutor)
-    jv.concatenaVideos(viagensFront, card.diretorioFront,
-                    diretorioVideosConcatenados, condutor)
+    if viagensBack:
+        jv.concatenaVideos(viagensBack, card.diretorioBack,
+                        diretorioVideosConcatenados, condutor, condutores)
+        jv.concatenaVideos(viagensFront, card.diretorioFront,
+                            diretorioVideosConcatenados, condutor, condutores)
 
     # Atualiza o indexInicial para o próximo Card, Card2 sequência do Card1 no número de viagem
     indexInicial = len(viagensBack)+1
