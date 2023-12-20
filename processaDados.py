@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 14/12/2023
+    Última atualização: 19/12/2023
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
@@ -42,6 +42,7 @@ else:
 
 limparBanco = 1
 indexInicial = 1
+condutorAtual = 0
 # Para cada Card obtido na leitura inicial é necessário gerar os arquivos de GPS e os videos concatenados
 for card in totalCards:
     viagensBack = None
@@ -69,10 +70,10 @@ for card in totalCards:
 
     # Gera os arquivos CSV que contém os dados das viagens com vídeo
     gp.geraPlanilhasOficial(viagensBack,condutor, condutores,
-                                diretorioGPSConcatenado, indexInicial)
+                                diretorioGPSConcatenado, indexInicial, condutorAtual)
 
     # Gera o arquivo CSV que contém os dados das viagens sem vídeo
-    gp.geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado)
+    gp.geraSemVideoCSV(viagensBack, condutor, condutores, diretorioGPSConcatenado, condutorAtual)
 
     # Criação e limpeza do diretorio de videos concatenados
     diretorioVideosConcatenados = f'{card.diretorio}/{ct.pastaVideosConcatenados}'
@@ -89,3 +90,4 @@ for card in totalCards:
     indexInicial = len(viagensBack)+1
 
     card.printParametros()
+    condutorAtual = utils.incrementaCondutor(condutorAtual)
