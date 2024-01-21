@@ -45,9 +45,8 @@ Independente da forma adotada, estamos interessados no script `processaDados.py`
 
 Considerando que o script python `processaDados.py` e a pasta `local_libs` estão presentes no ditetório raiz do HD, o programa pode ser executado da seguinte maneira: 
 
-    ```python
-     python3 processaDados.py XX
-    ```
-    Executando o programa desta maneira, o processo padrão ( concatenção e seccionamento ) será executado exclusivamente para o `"Driver XX"` passado por parâmetro, ou seja, ao final da execução, apenas o `"Driver XX"` terá seus vídeos concatenados e seus respectivos arquivos GPS.
+    python3 processaDados.py XX
+    
+Executando o programa desta maneira, o processo padrão ( concatenção e seccionamento ) será executado exclusivamente para o `"Driver XX"` passado por parâmetro, ou seja, ao final da execução, apenas o `"Driver XX"` terá seus vídeos concatenados e seus respectivos arquivos GPS.
 
 **Lembrando** - Para executar o comando descrito acima, com a pasta do HD aberto, basta clicar com o botão direito e escolher "Abrir no terminal"
