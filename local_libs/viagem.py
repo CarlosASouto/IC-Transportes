@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 14/12/2023
+    Última atualização: 21/01/2024
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """

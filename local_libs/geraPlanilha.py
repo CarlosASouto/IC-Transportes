@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 15/12/2023
+    Última atualização: 21/01/2024
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
@@ -77,7 +77,8 @@ def preencheArquivoCSV(tabela, arquivo, driver, trip):
                 aceleracaoMPS)).replace('.', ',')+';'
             ct.dictCSV['S'] = str(diffSegundos)+';'
             ct.dictCSV['TIME_ACUM'] = str(timeAcumulado)+';'
-
+            if (diffSegundos > 180):
+                trip +=1
         # Preenche o arquivo CSV
         for key in ct.dictCSV:
             arquivo.write(ct.dictCSV[key])
@@ -89,7 +90,7 @@ def geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado):
     conexao = sqlite3.connect(ct.dataBaseAuxiliar)
     cursor = conexao.cursor()
 
-    # Define nome do arqvui CSV
+    # Define nome do arquivo CSV
     semVideoCSV = f'{diretorioGPSConcatenado}/{ct.planilhaSemVideo}.csv'
 
     # Busca o último vídeo da última viagem previamente definida
