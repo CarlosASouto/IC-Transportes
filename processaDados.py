@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 14/12/2023
+    Última atualização: 21/01/2024
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
@@ -26,19 +26,12 @@ except:
     print("Condutor não informado!")
     print("Informe o condutor como argumento: ")
     print("> python3 processaDados.py 'codigo do condutor' ")
-    print("ou")
-    print("> python3 processaDados.py ./ (para rodar o codigo para todos os condutores da pasta)")
     sys.exit()
 
 # Leitura dos cards e seus respectivos videos
-if condutor == "./":
-    condutores = [pasta for pasta in os.listdir(condutor) if os.path.isdir(pasta) and pasta.startswith("Driver ")]
-    totalCards = []
-    for pasta_condutor in condutores:
-        totalCards.extend(cd.obtemCards(os.path.join(condutor, f'{pasta_condutor}')))
-else:
-    condutores = condutor
-    totalCards = cd.obtemCards("./Driver "+condutor)
+
+condutores = condutor
+totalCards = cd.obtemCards("./Driver "+condutor)
 
 limparBanco = 1
 indexInicial = 1
