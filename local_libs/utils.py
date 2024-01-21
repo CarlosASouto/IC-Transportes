@@ -2,7 +2,7 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 19/12/2023
+    Última atualização: 14/12/2023
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
@@ -21,8 +21,9 @@ def corrigeTabela(matriz):
             if (diffSegundos == 1):
                 novaMatriz.append(matriz[i])
             else:
-                for j in range(diffSegundos):
-                    novaMatriz.append((timeAnterior+j+1,)+matriz[i][1:])
+                if (diffSegundos <= 180):
+                    for j in range(diffSegundos):
+                        novaMatriz.append((timeAnterior+j+1,)+matriz[i][1:])
 
             # Não é necessário comando para quando a diferença entre time é 0, não sendo necessário inserções
         # Primeira iteração
@@ -40,7 +41,3 @@ def limpaDiretorio(diretorio):
         arquivos = os.listdir(diretorio)
         for i in arquivos:
             os.remove(f'{diretorio}/{i}')
-
-def incrementaCondutor (condutorAtual):
-    condutorAtual += 1
-    return condutorAtual

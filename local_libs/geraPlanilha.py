@@ -2,12 +2,11 @@
 
     Autor: Carlos Henrique Alves Souto/Leonardo Becker de Oliveira
     Contato: carloshasouto@gmail.com
-    Última atualização: 19/12/2023
+    Última atualização: 15/12/2023
     Link para o repositório: https://github.com/CarlosASouto/IC-Transportes
 
 """
 
-from calendar import c
 import datetime
 import sqlite3
 from local_libs import constants as ct
@@ -69,7 +68,8 @@ def preencheArquivoCSV(tabela, arquivo, driver, trip):
             diffSegundos = abs(segundosAtual-segundosAnterior)
 
             velocidadeAnteriorKMH = float(linhaAnterior[5])*3.6/100
-            aceleracaoMPS = (velocidadeKMH-velocidadeAnteriorKMH)/diffSegundos/3.6
+            aceleracaoMPS = (
+                velocidadeKMH-velocidadeAnteriorKMH)/diffSegundos/3.6
 
             timeAcumulado += diffSegundos
 
@@ -77,14 +77,15 @@ def preencheArquivoCSV(tabela, arquivo, driver, trip):
                 aceleracaoMPS)).replace('.', ',')+';'
             ct.dictCSV['S'] = str(diffSegundos)+';'
             ct.dictCSV['TIME_ACUM'] = str(timeAcumulado)+';'
-
+            if (diffSegundos > 180):
+                trip +=1
         # Preenche o arquivo CSV
         for key in ct.dictCSV:
             arquivo.write(ct.dictCSV[key])
 
 
 # Função que gera o arquivo CSV contendo os dados das viagens sem vídeo
-def geraSemVideoCSV(viagensBack, condutor, condutores, diretorioGPSConcatenado, condutorAtual):
+def geraSemVideoCSV(viagensBack, condutor, diretorioGPSConcatenado):
 
     conexao = sqlite3.connect(ct.dataBaseAuxiliar)
     cursor = conexao.cursor()
@@ -106,28 +107,21 @@ def geraSemVideoCSV(viagensBack, condutor, condutores, diretorioGPSConcatenado, 
 
     tabela = cursor.fetchall()
     tabela = utils.corrigeTabela(tabela)
-    if condutor == "./":
-        codigo = []
-        for driver in condutores:
-            separado = driver.split(' ')
-            codigo.append (separado[1])
     if (len(tabela) > 1):
         with open(semVideoCSV, 'w') as arquivoGPS:
-            if condutor == "./":
-                condutor = codigo[condutorAtual]
-                if viagensBack:
-                    preencheArquivoCSV(tabela, arquivoGPS, condutor,
-                                    viagensBack[len(viagensBack)-1].index+1)
-                else:
-                    preencheArquivoCSV(tabela, arquivoGPS, condutor, 1)
-            arquivoGPS.close()
+            if viagensBack:
+                preencheArquivoCSV(tabela, arquivoGPS, condutor,
+                                viagensBack[len(viagensBack)-1].index+1)
+            else:
+                preencheArquivoCSV(tabela, arquivoGPS, condutor, 1)
+        arquivoGPS.close()
 
     conexao.commit()
     conexao.close()
 
 
 # Função que gera as planilhas CSV que possuem vídeos associados, capturados pela plataforma
-def geraPlanilhasOficial(viagensBack, condutor, condutores, diretorioGPSConcatenado, indexInicial, condutorAtual):
+def geraPlanilhasOficial(viagensBack, condutor, condutores, diretorioGPSConcatenado, indexInicial):
     conexao = sqlite3.connect(ct.dataBaseAuxiliar)
     cursor = conexao.cursor()
     # Para cada viagem contida no Card
@@ -147,14 +141,13 @@ def geraPlanilhasOficial(viagensBack, condutor, condutores, diretorioGPSConcaten
         # Correção da tabela de dados ( manter 1 segundo de diferença para cada linha )
         tabela = utils.corrigeTabela(tabela)
         if condutor == "./":
-            codigo = []
             for driver in condutores:
                 separado = driver.split(' ')
-                codigo.append(separado[1])
+                codigo = separado[1]
                 try:
-                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo[condutorAtual]}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'       
+                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'       
                 except:
-                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo[condutorAtual]}{indexInicial+i}-{viagensBack[i].nome}.csv'
+                    nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{codigo}{indexInicial+i}-{viagensBack[i].nome}.csv'
         else:
             try:
                 nomeArquivoCSV = f'{diretorioGPSConcatenado}/Viagem{condutor}{indexInicial+i}-{convert_unix_timestamp(tabela[0][0]).strftime("%Y%m%d-%H%M%S")}.csv'       
@@ -163,7 +156,7 @@ def geraPlanilhasOficial(viagensBack, condutor, condutores, diretorioGPSConcaten
         with open(nomeArquivoCSV, 'w') as arquivoGPS:
             # Com a tabela obtida e corrigida, é possível criar os arquivos CSV
             if condutor == "./":
-                condutor = codigo[condutorAtual]
+                condutor = codigo
             preencheArquivoCSV(tabela, arquivoGPS, condutor,
                                viagensBack[i].index)
         arquivoGPS.close()
